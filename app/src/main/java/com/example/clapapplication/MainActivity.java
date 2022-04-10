@@ -13,23 +13,22 @@ import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
-    private SensorManager mSensorManager;
-    private Sensor mSensor;
-    private MediaPlayer mediaPlayer = null;
+    private SensorManager sensorMgr;
+    private Sensor sensor;
+    private MediaPlayer mPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        mediaPlayer = MediaPlayer.create(this, R.raw.clap);
-        mediaPlayer.setLooping(true);
+        sensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorMgr.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        mPlayer =  MediaPlayer.create(this, R.raw.clap);
     }
 
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, mSensor,
+        sensorMgr.registerListener(this, sensor,
                 SensorManager.SENSOR_DELAY_NORMAL);
 
     }
@@ -37,24 +36,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     protected void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(this);
+        sensorMgr.unregisterListener(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
+        if (mPlayer.isPlaying()) {
+            mPlayer.stop();
         }
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         float proximityVal = event.values[0];
-        if (proximityVal < 5 && !mediaPlayer.isPlaying()) {
-            mediaPlayer.start();
-        } else if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
+        if (proximityVal < 5 && !mPlayer.isPlaying()) {
+            mPlayer.start();
+        } else if (mPlayer.isPlaying()) {
+            mPlayer.pause();
         }
     }
 
